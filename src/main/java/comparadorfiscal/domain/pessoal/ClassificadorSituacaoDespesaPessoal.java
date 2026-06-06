@@ -17,7 +17,7 @@ public class ClassificadorSituacaoDespesaPessoal {
         } else if (percentualDtp.compareTo(limiteMaximo) < 0) {
             return SituacaoFiscalDespesaPessoal.ACIMA_DO_PRUDENCIAL;
         }
-        return SituacaoFiscalDespesaPessoal.ACIMA_DO_LIMITE;
+        return SituacaoFiscalDespesaPessoal.ACIMA_DO_LIMITE_LEGAL;
 
 
     }
