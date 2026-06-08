@@ -8,8 +8,23 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class ConsultarDespesaPessoalMunicipioUseCaseTest {
+
+    @Test
+    void deveLancarExcecaoQuandoNaoEncontrarDadosRgf() {
+        BuscarLinhasRgfPort buscarLinhasRgfPort = new BuscarLinhasRgfVaziaFake();
+        ClassificadorSituacaoDespesaPessoal classificador = new ClassificadorSituacaoDespesaPessoal();
+
+        ConsultarDespesaPessoalMunicipioUseCase useCase =
+                new ConsultarDespesaPessoalMunicipioUseCase(buscarLinhasRgfPort, classificador);
+
+        assertThatThrownBy(() -> useCase.consultar(4218707, 2024, 3))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Nenhum dado RGF encontrado para o município informado.");
+    }
+
 
     @Test
     void deveConsultarDespesaPessoalDeUmMunicipio() {
@@ -33,6 +48,12 @@ public class ConsultarDespesaPessoalMunicipioUseCaseTest {
 
     }
 
+    private static class BuscarLinhasRgfVaziaFake implements BuscarLinhasRgfPort {
+        @Override
+        public List<LinhaRgf> buscarPorMunicipio(Integer codIbge, Integer exercicio, Integer periodo) {
+            return List.of();
+        }
+    }
     private static class BuscarLinhasRgfFake implements BuscarLinhasRgfPort {
         @Override
         public List<LinhaRgf> buscarPorMunicipio(Integer codIbge, Integer exercicio, Integer periodo) {
